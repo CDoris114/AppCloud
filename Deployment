@@ -1,0 +1,42 @@
+# AppCloud
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sshkeygenerator-deployment
+  labels:
+    app: sshkeygenerator
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sshkeygenerator
+  template:
+    metadata:
+      labels:
+        app: sshkeygenerator
+    spec:
+      containers:
+      - name: sshkeygenerator
+        image: doriscomanescu/sshkeygenerator
+        ports:
+        - containerPort: 8080
+        env:
+        - name: USERNAME
+          value:
+        - name: PASSWORD
+          valueFrom: 
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: sshkeygenerator
+spec:
+  selector:
+    app: sshkeygenerator
+  type: LoadBalancer  
+  ports:
+    - protocol: TCP
+      port: 8081
+      targetPort: 8081
+      nodePort: 30000
